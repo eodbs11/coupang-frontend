@@ -11,20 +11,42 @@ import {
 import CategoryItem from "./CategoryItem";
 import { getCategories } from "../api/product";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { userSave, userLogout } from "../store/user";
 
 const Header = () => {
+  const dispatch = useDispatch();
+
   const [categories, setCategories] = useState([]);
   const [active, setActive] = useState(false);
 
+  const user = (user = useSelector((state) => {
+    return state.user;
+  }));
+
   const categoriesAPI = async () => {
     const response = await getCategories();
-    console.log(response.data);
     setCategories(response.data);
   };
 
   useEffect(() => {
     categoriesAPI();
+    const token = localStorage.getItem("token");
+    if (token !== null) {
+      dispatch(userSave(JSON.parse(localStorage.getItem("user"))));
+    }
   }, []);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const logout = (e) => {
+    e.preventDefault();
+    e.preventDefault("token");
+    localStorage.removeItem("user");
+    dispatch(userLogout());
+  };
 
   return (
     <>
@@ -34,8 +56,16 @@ const Header = () => {
           <a href="#">입점신청</a>
         </div>
         <div className="tob-bar-right">
-          <a href="#">로그인</a>
-          <a href="#">회원가입</a>
+          {Object.keys(user).length !== 0 ? (
+            <a href="" onClick={logout}>
+              로그아웃
+            </a>
+          ) : (
+            <>
+              <a href="/login">로그인</a>
+              <a href="#">회원가입</a>
+            </>
+          )}
           <a href="#">고객센터</a>
         </div>
       </div>

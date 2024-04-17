@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080/api/",
+  baseURL: "http://localhost:8080/api/public/",
 });
 
 export const getCategories = async () => {
@@ -10,6 +10,10 @@ export const getCategories = async () => {
 
 export const getProducts = async (page) => {
   return await instance.get("public/product?page=" + page);
+};
+
+export const getProduct = async (code) => {
+  return await instance.get("public/product?code=" + code);
 };
 
 //getProduct
