@@ -20,9 +20,9 @@ const Header = () => {
   const [categories, setCategories] = useState([]);
   const [active, setActive] = useState(false);
 
-  const user = (user = useSelector((state) => {
+  const user = useSelector((state) => {
     return state.user;
-  }));
+  });
 
   const categoriesAPI = async () => {
     const response = await getCategories();
@@ -37,13 +37,9 @@ const Header = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   const logout = (e) => {
     e.preventDefault();
-    e.preventDefault("token");
+    localStorage.removeItem("token");
     localStorage.removeItem("user");
     dispatch(userLogout());
   };
@@ -66,6 +62,7 @@ const Header = () => {
               <a href="#">회원가입</a>
             </>
           )}
+
           <a href="#">고객센터</a>
         </div>
       </div>
@@ -114,7 +111,7 @@ const Header = () => {
             </a>
           </div>
           <nav className="header-main-bottom">
-            <FaChevronLeft on onClick={() => setActive(true)} />
+            <FaChevronLeft onClick={() => setActive(true)} />
             <a href="#" className={active ? "header-main-bottom-right" : ""}>
               <img
                 src="https://image6.coupangcdn.com/image/coupang/common/coupang_play_icon@3x.png"
@@ -190,7 +187,7 @@ const Header = () => {
               />
               <span>여행/티켓</span>
             </a>
-            <FaChevronRight on onClick={() => setActive(false)} />
+            <FaChevronRight onClick={() => setActive(false)} />
           </nav>
         </div>
       </header>

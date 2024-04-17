@@ -16,14 +16,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const info = useSelector((state) => {
-    return state.user;
-  });
-
-  useEffect(() => {
-    console.log(info);
-  }, [info]);
-
   const submit = () => {
     dispatch(asyncLogin(user));
     navigate("/"); // 새로고침과 같음
@@ -42,17 +34,19 @@ const Login = () => {
       <Form.Control
         type="password"
         placeholder="비밀번호"
-        style={{ marginBottom: "10px" }}
         value={user.password}
         onChange={(e) =>
           setUser((prev) => ({ ...prev, password: e.target.value }))
         }
       />
-      <Button variant="dark" style={{ width: "100%", marginTop: "10px" }}>
+      <Button
+        variant="dark"
+        style={{ width: "100%", marginTop: "10px" }}
+        onClick={submit}
+      >
         로그인
       </Button>
     </Container>
   );
 };
-
 export default Login;

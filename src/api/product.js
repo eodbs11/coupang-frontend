@@ -5,15 +5,13 @@ const instance = axios.create({
 });
 
 export const getCategories = async () => {
-  return await instance.get("public/category");
+  return await instance.get("category");
 };
 
 export const getProducts = async (page) => {
-  return await instance.get("public/product?page=" + page);
+  return await instance.get("product?page=" + page);
 };
 
 export const getProduct = async (code) => {
-  return await instance.get("public/product?code=" + code);
+  return await instance.get("product/" + code);
 };
-
-//getProduct

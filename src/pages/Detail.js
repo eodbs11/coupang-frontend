@@ -1,4 +1,4 @@
-import { getProducts } from "../api/product";
+import { getProduct } from "../api/product";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -6,20 +6,19 @@ import { useSelector } from "react-redux";
 import { Form, Button } from "react-bootstrap";
 import { addReview, getReviews } from "../api/review";
 
-const StyledProduct = styled.div`
-  display: flex;
-
-  img {
-    width: 50%;
-    margin-right: 20px;
-  }
-
-  div {
+const Div = styled.div`
+  .product-info {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    img {
+      width: 50%;
+      margin-right: 20px;
+    }
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
   }
-
   .review-add {
     margin-top: 20px;
 
@@ -40,23 +39,22 @@ const Detail = () => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
 
-  const productsAPI = async () => {
+  const info = useSelector((state) => {
+    return state.user;
+  });
+
+  const productAPI = async () => {
     const response = await getProduct(code);
     setProduct(response.data);
   };
-
   useEffect(() => {
-    productsAPI();
+    productAPI();
     if (Object.keys(info).length === 0) {
       setUser(JSON.parse(localStorage.getItem("user")));
     } else {
       setUser(info);
     }
   }, []);
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   const reviewSubmit = async () => {
     // 이건 form 태그를 사용하지 않고 보낼때!
@@ -87,5 +85,4 @@ const Detail = () => {
     </Div>
   );
 };
-
 export default Detail;
