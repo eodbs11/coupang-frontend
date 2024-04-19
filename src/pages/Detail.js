@@ -29,20 +29,23 @@ const Div = styled.div`
       resize: none;
       margin-bottom: 10px;
     }
-    .review-contents {
-      margin-top: 30px;
-      .review-content {
-        margin-top: 15px;
-        img {
-          width: 200px;
-        }
-        .btn-container {
-          display: flex;
-          justify-content: flex-end;
+    button {
+      width: 100%;
+    }
+  }
+  .review-contents {
+    margin-top: 30px;
+    .review-content {
+      margin-top: 15px;
+      img {
+        width: 200px;
+      }
+      .btn-container {
+        display: flex;
+        justify-content: flex-end;
 
-          button {
-            margin-left: 5px;
-          }
+        button {
+          margin-left: 5px;
         }
       }
     }
@@ -73,7 +76,7 @@ const Detail = () => {
     setReviews(response.data);
   };
 
-  // 처음만 실행되는 useEffect
+  // 처음만 실행되는 useEffect!!
   useEffect(() => {
     productAPI();
     reviewsAPI();
@@ -95,8 +98,7 @@ const Detail = () => {
       formData.append(`files[${index}]`, image);
     });
     await addReview(formData);
-    setImages([]); // 얘는 문제 있음! css로 스타일링 하시면 사실 문제가 있는게 아니고
-    // 비어지기 때문에! 이건 브라우저 보안상 문제 때문
+    setImages([]); // 얘는 문제 있음! CSS로 스타일링 하시면 사실 문제가 있는게 아니고 비어지기 때문에! 이건 브라우저 보안상 문제 때문!
     setTitle("");
     setDesc("");
     reviewsAPI();
@@ -109,7 +111,6 @@ const Detail = () => {
 
   const onDelete = async (code) => {
     await delReview(code);
-    // 결과 즉시 출현
     reviewsAPI();
   };
 
@@ -117,7 +118,7 @@ const Detail = () => {
     setEdit(review);
   };
 
-  const deleteImage = () => {
+  const deleteImage = (code) => {
     setEdit((prev) => {
       const images = prev.images.filter((image) => image.reviImgCode !== code);
       return { ...prev, images: images };
@@ -129,7 +130,9 @@ const Detail = () => {
   };
 
   const reviewUpdate = async () => {
+    // FormData 방식으로 전달!
     const formData = new FormData();
+    // append로 필요한 값들 추가해야 하는 것!
     formData.append("reviTitle", edit.reviTitle);
     formData.append("reviDesc", edit.reviDesc);
     images.forEach((image, index) => {
@@ -137,17 +140,17 @@ const Detail = () => {
     });
     formData.append("reviCode", edit.reviCode);
     formData.append("id", user.id);
+    formData.append("prodCode", code);
     edit.images.forEach((image, index) => {
       formData.append(`images[${index}]`, image.reviUrl);
     });
-    // FormData 방식으로 전달
-    // append로 필요한 값들 추가해야 하는 것
-    // updateReview <formData 값 전달
+
+    // updateReview<-- formData 값 전달!
     await updateReview(formData);
-    // images 비울 것 edit 비울것
+    // images 비울 것! edit 비울것!
     setImages([]);
     setEdit(null);
-    // review 다시 호출
+    // review 다시 호출!
     reviewsAPI();
   };
 
@@ -188,7 +191,7 @@ const Detail = () => {
           <div key={review.reviCode} className="review-content">
             {edit?.reviCode === review.reviCode ? (
               <>
-                {edit.images.map((images) => (
+                {edit.images.map((image) => (
                   <img
                     key={image.reviImgCode}
                     src={image.reviUrl.replace("D:", "http://localhost:8081")}
@@ -216,7 +219,7 @@ const Detail = () => {
                   }
                 />
                 <div className="btn-container">
-                  <Button variant="warning" onClick={review}>
+                  <Button variant="warning" onClick={reviewUpdate}>
                     완료
                   </Button>
                   <Button variant="danger" onClick={cancel}>
@@ -234,24 +237,19 @@ const Detail = () => {
                 ))}
                 <h4>{review.reviTitle}</h4>
                 <p>{review.reviDesc}</p>
+                <div className="btn-container">
+                  <Button variant="warning" onClick={() => onUpdate(review)}>
+                    수정
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => onDelete(review.reviCode)}
+                  >
+                    삭제
+                  </Button>
+                </div>
               </>
             )}
-
-            <div className="btn-container">
-              <Button
-                variant="warning"
-                onClick={() => onUpdate(review.reviCode)}
-              >
-                수정
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => onDelete(review.reviCode)}
-              >
-                삭제
-              </Button>
-              {/* 여기에 연결할 매서드 추가 reviCode를 매개변수로 보내는 것 까지 */}
-            </div>
           </div>
         ))}
       </div>

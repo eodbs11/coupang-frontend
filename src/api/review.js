@@ -34,15 +34,13 @@ export const getReviews = async (code) => {
   return await instance.get("product/" + code + "/review");
 };
 
-// delete  ("/review/{code}")매핑에 해당하는 메서드명: delReview
-// 인증 필요 o
-
+// @DeleteMapping("/review/{code}") > 이에 해당하는 기능! 메서드명 : delReview
+// 인증 필요 O
 export const delReview = async (code) => {
-  return await authorize.delete("review/", code);
+  return await authorize.delete("review/" + code);
 };
 
-// @PutMapping("/review"), 인증 필요 o, RequestBody로 데이터 값 받음
-
+// @PutMapping("/review"), 인증 필요 O, RequestBody로 데이터 값 받음
 export const updateReview = async (data) => {
   return await authorize.put("review", data);
 };
